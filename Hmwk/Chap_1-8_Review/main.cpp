@@ -60,8 +60,8 @@ int menu(){
     do{
         cout << endl << endl;
         cout << "Homework Problems: Assignment #1" << endl;
-        cout << "[1] Problem 3.12 (Tax not calc'd properly)" << endl;
-        cout << "[2] Problem 3.13 (Tax not calc'd properly)" << endl;
+        cout << "[1] Problem 3.12" << endl;
+        cout << "[2] Problem 3.13" << endl;
         cout << "[3] Problem 4.10" << endl;
         cout << "[4] Problem 5.11" << endl;
         cout << "[5] Problem 6.7" << endl;
