@@ -12,11 +12,11 @@
 #include <algorithm>
 using namespace std;
 
-bool select();
-int menu();
-void num3_12();
-void num3_13();
-void num4_10();
+bool select(); //For menu loop.
+int menu();    //Menu
+void num3_12();//Sales tax
+int num3_13();//Property tax.
+void num4_10();//
 void num5_11();
 void num6_7();
 float celsius(float);
@@ -47,6 +47,7 @@ int main(int argc, char** argv) {
                 break;
             case 6:
                 num7_6();
+                break;
             case 7:
                 num8_7();
                 break;
@@ -65,6 +66,7 @@ int menu(){
         cout << "[4] Problem 5.11" << endl;
         cout << "[5] Problem 6.7" << endl;
         cout << "[6] Problem 7.6" << endl;
+        cout << "[7] Problem 8.7" << endl;
         cout << "Enter a choice:  ";
         cin >> choice;
         if(!cin){
@@ -92,9 +94,11 @@ void num3_12(){
     cout << fixed << showpoint << setprecision(2);
     
     float sales = total / 1.06;
-    float cntyTax = (total / 1.04) - sales;
-    float statTax = (total / 1.02) - sales;
-    float totlTax = cntyTax + statTax;
+    float sp = sales + .005;
+    float totlTax = total - sp;
+    float cntyTax = (totlTax * 1/3) + .005;
+    float statTax = (totlTax * 2/3) + .005;
+
     
     cout << "Month: " << month << endl;
     cout << "--------------------" << endl;
@@ -103,28 +107,19 @@ void num3_12(){
     cout << "County Sales Tax:    $ " << setw(9) << cntyTax << endl;
     cout << "State Sales Tax:     $ " << setw(9) << statTax << endl;
     cout << "Total Sales Tax:     $ " << setw(9) << totlTax << endl;
-    
-    cin.clear();
-    cin.ignore();
 }
-void num3_13(){
-    float size;
-    cout << "Enter the size of the property in acres: ";
-    cin >> size;
+int num3_13(){
+    float value;
+    cout << "Enter the value of the piece of property: ";
+    cin >> value;
     
-    float assValu = 0;
-    float propTax = 0;
-    float acrValu = 0;
-    cout << fixed << showpoint << setprecision(2);
-    acrValu = size * 10000;
-    assValu = acrValu * .60;
-    propTax = (assValu / 100) / .64;
-    cout << "Assessment value: " << setw(5) << assValu << endl;
-    cout << "Property Tax: " << setw(5) << propTax << endl;
+    float assValu = value * .6;
+    float propTax = (assValu / 100) * .64;
     
-    cin.clear();
-    cin.ignore();
+    cout << "The assessment value is: " << assValu << endl;
+    cout << "The property tax is: " << propTax << endl; 
     
+    return 0;
 }
 void num4_10(){
     int units;
@@ -154,8 +149,6 @@ void num4_10(){
     else{
         cout << "Invalid input! Must enter a number higher than 0";
     }
-    cin.clear();
-    cin.ignore();
 }
 void num5_11(){
     int initPop;
@@ -190,8 +183,6 @@ void num5_11(){
     cout << "Population Day " << i << " is " << todaysPop << endl;
     todaysPop = (todaysPop * popIncr) + todaysPop;
     }            
-    cin.clear();
-    cin.ignore();
 }
 void num6_7(){
     float f;
@@ -204,8 +195,6 @@ void num6_7(){
         cout << celsius(i);
         cout << endl;
     }
-    cin.clear();
-    cin.ignore();
 }
 float celsius(float f){
     float celsius = .55 * (f - 32);
@@ -250,8 +239,6 @@ void num7_6(){
     cout << "Average: " << average << endl;
    
     infile.close();
-    cin.clear();
-    cin.ignore();
 }
 void num8_7(){
     const int SIZE = 20;
@@ -266,20 +253,23 @@ void num8_7(){
                                 "Pike, Gordon", "Holland, Beth" };
     
     int x = sizeof(names)/sizeof(names[0]);
-    
     sort(names, names+x);
     
     for(int i = 0; i < x; i++){
         cout << *(names + i) << " ";
     }
-    string name = "Collins, Bill";
+    string name = "Collins, Bill";  //Chance string to any name in the array 
+                                    //Above to test and find position.
+    
    // cout << "Enter a name: ";
-   // getline(cin, name, '\n'); // Makes sure you get the whole name, start until /n
+   // getline(cin, name, '\n'); // Makes sure you get the whole name, start until \n
+    cout << endl;
+    cout << "We will be searching for: " << name << endl;
     
     int pos = binarySearch(names, SIZE, name);
-    
+    cout << endl;
     if(pos!=-1){
-       cout << names[pos] << endl; 
+       cout << "The position of " << names[pos] << " is " << pos << endl; 
     }
     else{
         cout<<"Not found"<<endl;
@@ -306,7 +296,6 @@ int binarySearch(string array[], int SIZE, string value){
     else
     first = middle + 1; // If value is in upper half
     }
-    
     return position;
  }
 bool select(){
