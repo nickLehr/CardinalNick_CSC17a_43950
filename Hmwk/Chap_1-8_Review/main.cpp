@@ -1,6 +1,6 @@
 /* 
  * File:   main.cpp
- * Author: Owner
+ * Author: Owner 
  *
  * Created on March 13, 2015, 12:07 PM
  */
@@ -9,8 +9,11 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
+#include <algorithm>
 using namespace std;
 
+bool select();
+int menu();
 void num3_12();
 void num3_13();
 void num4_10();
@@ -18,15 +21,62 @@ void num5_11();
 void num6_7();
 float celsius(float);
 void num7_6();
+void num8_7();
+int binarySearch(string [], int, string);
+
 
 int main(int argc, char** argv) {
-    //num3_12();
-    //num3_13();
-    //num4_10();
-    //num5_11();
-    //num6_7();
-    num7_6();
+   srand(time(0));
+    do{
+        int choice = menu();
+        switch(choice){
+            case 1: 
+                 num3_12(); 
+                break;
+            case 2:
+                num3_13();
+                break;
+            case 3:
+                num4_10();
+                break;
+            case 4:
+                num5_11();
+                break;
+            case 5:
+                num6_7();
+                break;
+            case 6:
+                num7_6();
+            case 7:
+                num8_7();
+                break;
+        }
+    }while(select());
     return 0;
+}
+int menu(){
+    int choice;
+    do{
+        cout << endl << endl;
+        cout << "Homework Problems: Assignment #1" << endl;
+        cout << "[1] Problem 3.12 (Tax not calc'd properly)" << endl;
+        cout << "[2] Problem 3.13 (Tax not calc'd properly)" << endl;
+        cout << "[3] Problem 4.10" << endl;
+        cout << "[4] Problem 5.11" << endl;
+        cout << "[5] Problem 6.7" << endl;
+        cout << "[6] Problem 7.6" << endl;
+        cout << "Enter a choice:  ";
+        cin >> choice;
+        if(!cin){
+            cout << "Invalid, enter again: " << endl;
+            cin.clear();
+            cin.ignore();
+            cin >> choice;
+        }
+        cout<<"=============================================="<<endl;
+    }while(choice != 1 && choice!= 2 && choice != 3 && choice != 4
+            && choice != 5 && choice != 6 && choice != 7);
+    return choice;
 }
 void num3_12(){
     string month;
@@ -42,8 +92,8 @@ void num3_12(){
     cout << fixed << showpoint << setprecision(2);
     
     float sales = total / 1.06;
-    float cntyTax = (total / 1.02) - sales;
-    float statTax = (total / 1.04) - sales;
+    float cntyTax = (total / 1.04) - sales;
+    float statTax = (total / 1.02) - sales;
     float totlTax = cntyTax + statTax;
     
     cout << "Month: " << month << endl;
@@ -53,6 +103,9 @@ void num3_12(){
     cout << "County Sales Tax:    $ " << setw(9) << cntyTax << endl;
     cout << "State Sales Tax:     $ " << setw(9) << statTax << endl;
     cout << "Total Sales Tax:     $ " << setw(9) << totlTax << endl;
+    
+    cin.clear();
+    cin.ignore();
 }
 void num3_13(){
     float size;
@@ -68,6 +121,9 @@ void num3_13(){
     propTax = (assValu / 100) / .64;
     cout << "Assessment value: " << setw(5) << assValu << endl;
     cout << "Property Tax: " << setw(5) << propTax << endl;
+    
+    cin.clear();
+    cin.ignore();
     
 }
 void num4_10(){
@@ -98,6 +154,8 @@ void num4_10(){
     else{
         cout << "Invalid input! Must enter a number higher than 0";
     }
+    cin.clear();
+    cin.ignore();
 }
 void num5_11(){
     int initPop;
@@ -132,6 +190,8 @@ void num5_11(){
     cout << "Population Day " << i << " is " << todaysPop << endl;
     todaysPop = (todaysPop * popIncr) + todaysPop;
     }            
+    cin.clear();
+    cin.ignore();
 }
 void num6_7(){
     float f;
@@ -144,6 +204,8 @@ void num6_7(){
         cout << celsius(i);
         cout << endl;
     }
+    cin.clear();
+    cin.ignore();
 }
 float celsius(float f){
     float celsius = .55 * (f - 32);
@@ -186,6 +248,78 @@ void num7_6(){
     cout << "Highest: " << highest << endl;
     cout << "Total: " << total << endl;
     cout << "Average: " << average << endl;
-     
+   
     infile.close();
+    cin.clear();
+    cin.ignore();
+}
+void num8_7(){
+    const int SIZE = 20;
+
+    string names[SIZE] ={"Collins, Bill", "Smith, Bart", "Allen, Jim",
+                                "Griffin, Jim", "Stamey, Marty", "Rose, Geri",
+                                "Taylor, Terri", "Johnson, Jill",
+                                "Allison, Jeff", "Looney, Joe", "Wolfe, Bill",
+                                "James, Jean", "Weaver, Jim", "Pore, Bob",
+                                "Rutherford, Greg", "Javens, Renee",
+                                "Harrison, Rose", "Setzer, Cathy",
+                                "Pike, Gordon", "Holland, Beth" };
+    
+    int x = sizeof(names)/sizeof(names[0]);
+    
+    sort(names, names+x);
+    
+    for(int i = 0; i < x; i++){
+        cout << *(names + i) << " ";
+    }
+    string name = "Collins, Bill";
+   // cout << "Enter a name: ";
+   // getline(cin, name, '\n'); // Makes sure you get the whole name, start until /n
+    
+    int pos = binarySearch(names, SIZE, name);
+    
+    if(pos!=-1){
+       cout << names[pos] << endl; 
+    }
+    else{
+        cout<<"Not found"<<endl;
+    }
+    
+
+}
+int binarySearch(string array[], int SIZE, string value){
+    int first = 0, // First array element
+    last = SIZE - 1, // Last array element
+    middle, // Midpoint of search
+    position = -1; // Position of search value
+    bool found = false; // Flag
+
+    while (!found && first <= last){
+    middle = (first + last) / 2; // Calculate midpoint
+    if (array[middle] == value) // If value is found at mid
+    {
+    found = true;
+    position = middle;
+    }
+    else if (array[middle] > value) // If value is in lower half
+    last = middle - 1;
+    else
+    first = middle + 1; // If value is in upper half
+    }
+    
+    return position;
+ }
+bool select(){
+    cout << endl;
+    cin.clear();
+    cin.ignore();
+    cout << "Do you want to select another problem? [y/n]:  ";
+    char choice;
+    cin.get(choice);
+    if(choice=='y'){
+        return true;
+    }
+    else{
+        return false;
+    }
 }
