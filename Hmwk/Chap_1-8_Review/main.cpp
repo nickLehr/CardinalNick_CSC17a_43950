@@ -1,6 +1,6 @@
 /* 
  * File:   main.cpp
- * Author: Owner 
+ * Author: Nicholas Cardinal
  *
  * Created on March 13, 2015, 12:07 PM
  */
@@ -59,7 +59,7 @@ int menu(){
     int choice;
     do{
         cout << endl << endl;
-        cout << "Homework Problems: Assignment #1" << endl;
+        cout << "Homework Problems: Assignment #2" << endl;
         cout << "[1] Problem 3.12" << endl;
         cout << "[2] Problem 3.13" << endl;
         cout << "[3] Problem 4.10" << endl;
