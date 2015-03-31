@@ -1,6 +1,6 @@
 /* 
  * File:   main.cpp
- * Author: Owner
+ * Author: Nicholas Cardinal
  *
  * Created on March 29, 2015, 12:21 PM
  */
@@ -11,6 +11,15 @@
 
 using namespace std;
 
+//User libraries
+//#include <speaker.h>
+struct Speaker{
+    string name;
+    int phoneNum;
+    string topic;
+    unsigned int fee;
+};
+
 //Prototypes
 bool select();
 int menu();
@@ -20,6 +29,10 @@ void num106();
 int menu2(char *, int);
 int isVowel(char *);
 int isCons(char *);
+void num119();
+void menu3();
+Speaker addElem(Speaker&, int);
+Speaker chngeEle(Speaker&);
 
 int main(int argc, char** argv) {
     //MAIN FUNTION CONTAINING THE HQ FOR MY MENU
@@ -35,6 +48,7 @@ int main(int argc, char** argv) {
                 num106();
                 break;
             case 3:
+                num119;
                 break;
             case 4:
                 break;
@@ -103,6 +117,7 @@ void num106(){
     char sentnce[SIZE];
     sntPrt = sentnce;
     cout << "Enter a sentence (Under 50 character): ";
+    cin.clear();
     cin.getline(sentnce, SIZE, '\n');
     menu2(sntPrt, SIZE);
 }
@@ -118,14 +133,7 @@ int menu2(char * text, int SIZE){
         cout << "E) Exit the program." << endl;
         cout << "Enter a choice:  ";
         cin >> choice;
-        if(!cin){
-            cout << "Invalid, enter again: " << endl;
-            cin.clear();
-            cin.ignore();
-            cin >> choice;
-        }
         cout<<"=============================================="<<endl;
-        
         if(tolower(choice) == 'a'){
             int vowels = isVowel(text);
             cout << "The number of vowels is " << vowels << "." << endl;
@@ -137,12 +145,16 @@ int menu2(char * text, int SIZE){
             menu2(text, SIZE);
         }
         if(tolower(choice) == 'c'){
-            
+            int v = isVowel(text);
+            int c = isCons(text);
+            cout << "The number of characters in your string is " <<
+                    c+v << "." << endl;
         }
         if(tolower(choice) == 'd'){
             num106();
         }
         if(tolower(choice) == 'e'){
+            return 0;
         }
     }while(tolower(choice) != 'a' && tolower(choice) != 'b'
             && tolower(choice) != 'c' && tolower(choice) != 'e');
@@ -165,18 +177,50 @@ int isVowel(char * text){
 }
 int isCons(char * text){
     int cons=0;
-    for(int i=0;i<strlen(*text);i++){
-        if(tolower(*text[i]) != 'a' || tolower(*text[i]) != 'e' || 
-                tolower(*text[i]) != 'i' || tolower(*text[i]) != 'o' ||
-                tolower(*text[i]) != 'u'){
+    for(int i=0;i<strlen(text);i++){
+        if(!(tolower(text[i]) == 'a' || tolower(text[i]) == 'e' || 
+                tolower(text[i]) == 'i' || tolower(text[i]) == 'o' ||
+                tolower(text[i]) =='u' || text[i] == ' ')){
             cons++;
         }
     }
     return cons; 
 }
+void num119(){
+    const int SIZE = 10;
+    Speaker person[SIZE];
+}
+Speaker addElem(Speaker &p, int SIZE){
+    int n = 1;
+    for(int i=0;i<SIZE;i++){
+        cout << "Enter speaker " << n << "'s name: ";
+        cin >> p.name;
+        if(p.name == 'E'){
+            break;
+        }
+        cout << "Enter speaker " << n << "'s telephone number: ";
+        cin >> p.phoneNum;
+        if(p.phoneNum == 'E'){
+            break;
+        }
+        cout << "Enter speaker " << n << "'s speaking topic: ";
+        cin >> p.topic;
+        if(p.topic == 'E'){
+            break;
+        }
+        cout << "Enter speaker " << n << "'s fee required: ";
+        cin >> p.fee;
+        if(p.fee == 'E'){
+            break;
+        }
+    }
+    return p;
+}
 
-
-
+Speaker chngeEle(Speaker &p){
+    enum Day = { NAME, PHONE, TOPIC, FEE};
+    
+}
 
 
 
