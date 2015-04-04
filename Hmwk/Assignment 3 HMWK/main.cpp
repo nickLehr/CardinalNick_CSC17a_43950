@@ -8,17 +8,33 @@
 #include <cstdlib>
 #include <iostream>
 #include <cstring>
+#include <fstream>
+
 using namespace std;
 
 enum Info { blank, NAME, PHONE, TOPIC, FEE };
 enum speakerMenu { blnk, ENTER, CHANGE, VIEW };
+enum Division { blk, NORTH, SOUTH, EAST, WEST };
 //User libraries
 //#include <speaker.h>
 struct Speaker{
     string name;
-    int phoneNum;
+    float phoneNum;
     string topic;
     unsigned int fee;
+};
+
+struct Data{
+    string divName[4];
+    float sales[4][4];
+};
+struct Movie{
+    string title;
+    string director;
+    int year;
+    int runTime;
+    int prodCost;
+    int revenue;
 };
 
 //Prototypes
@@ -33,9 +49,17 @@ int isVowel(char *);
 int isCons(char *);
 void num119();
 void menu3();
-void prntEle(Speaker, int);
-Speaker addElem(Speaker &, int);
-Speaker chngeEle(Speaker &);
+void prntEle(Speaker [], int);
+Speaker* addElem(Speaker*, int);
+Speaker* chngeEle(Speaker []);
+void num111();
+void prtData(Movie);
+void num127();
+void num128();
+void arrayToFile(string, char *, int);
+void fileToArray(string, char *, int);
+int num1211();
+void num101();
 
 int main(int argc, char** argv) {
     //MAIN FUNTION CONTAINING THE HQ FOR MY MENU
@@ -51,11 +75,22 @@ int main(int argc, char** argv) {
                 num106();
                 break;
             case 3:
-                num119;
+                num119();
                 break;
             case 4:
+                num111();
                 break;
             case 5:
+                num127();
+                break;
+            case 6:
+                num128();
+                break;
+            case 7:
+                num1211();
+                break;
+            case 8:
+                num101();
                 break;
         }
     }while(select());
@@ -70,9 +105,12 @@ int menu(){
         cout << "Assignment 3" << endl;
         cout << "[1] Problem 10.3/10.4" << endl;
         cout << "[2] Problem 10.6" << endl;
-        cout << "[3]" << endl;
-        cout << "[4]" << endl;
-        cout << "[5]" << endl;
+        cout << "[3] Problem 11.9" << endl;
+        cout << "[4] Problem 11.1/11.2" << endl;
+        cout << "[5] Problem 12.7" << endl;
+        cout << "[6] Problem 12.8" << endl;
+        cout << "[7] Problem 12.11" << endl;
+        cout << "[8] Problem 10.1" << endl;
         cout << "Enter a choice:  ";
         cin >> choice;
         cin.clear();
@@ -85,7 +123,7 @@ int menu(){
         }
         cout<<"=============================================="<<endl;
     }while(choice != 1 && choice!= 2 && choice != 3 && choice != 4
-            && choice != 5);
+            && choice != 5 && choice != 6 && choice != 7 && choice != 8);
     return choice;
 }
 
@@ -155,11 +193,15 @@ int menu2(char * text, int SIZE){
             int c = isCons(text);
             cout << "The number of characters in your string is " <<
                     c+v << "." << endl;
+            cout << endl;
+            num106();
         }
         if(tolower(choice) == 'd'){
+            cin.ignore();
             num106();
         }
         if(tolower(choice) == 'e'){
+
             return 0;
         }
     }while(tolower(choice) != 'a' && tolower(choice) != 'b'
@@ -190,18 +232,20 @@ int isCons(char * text){
             cons++;
         }
     }
-    return cons; 
+    return cons;
 }
 void num119(){
     int choice;
     const int SIZE = 10;
-    Speaker person[SIZE];
+    Speaker *person = new Speaker[SIZE];
     //Put in a function;
+    do{
     do{
         cout << endl << endl;
         cout << "[1] Enter Speaker's Information" << endl;
         cout << "[2] Change Speaker's Information" << endl;
         cout << "[3] View All Speaker's Information" << endl;
+        cout << "[4] Exit" << endl;
         cout << "Enter a choice:  ";
         cin >> choice;
         cin.clear();
@@ -212,37 +256,57 @@ void num119(){
             cin.ignore();
             cin >> choice;
         }
-    }while(choice != ENTER && choice!= CHANGE && choice != VIEW);
+    }while(choice != ENTER && choice!= CHANGE && choice != VIEW && choice != 4);
     
     if(choice == ENTER){
-        addElem(person, SIZE);
+        person = addElem(person, SIZE);
     }
     if(choice == CHANGE){
-        chngeEle(person);
+        person = chngeEle(person);
     }
     if(choice == VIEW){
-        prntEle(person);
+        prntEle(person, SIZE);
+    }
+    if(choice == 4){
+        cout << "Press enter";
+        break;
+    }
+    }while(choice != 4);
+    
+    delete [] person;
+}
+Speaker* addElem(Speaker *p, int SIZE){
+    int n = 1;
+    Speaker *ptr = new Speaker[SIZE];
+    for(int i=0;i<SIZE;i++){
+        cout << "Enter speaker " << n << "'s first name: ";
+        cin >> ptr[i].name;
+        cout << ptr[i].name<<endl;
+        cout << "Enter speaker " << n << "'s telephone number: ";
+        cin >> ptr[i].phoneNum;
+        cout << "Enter speaker " << n << "'s speaking topic: ";
+        cin >> ptr[i].topic;
+        cout << "Enter speaker " << n << "'s fee required: ";
+        cin >> ptr[i].fee;
+        if(ptr[i].fee < 0){
+            cout << "INVALID! No negative numbers!" << endl;
+            cout << "Please enter again: ";
+            cin >> ptr[i].fee;
+        }
+        n++; 
+        cout << endl;
+        cin.ignore();
+        bool choice = playAgain();
+        if(choice == false){
+            break;
+        }
     }
     
-}
-Speaker addElem(Speaker &p, int SIZE){
-    int n = 1;
-    for(int i=0;i<SIZE;i++){
-        cout << "Enter speaker " << n << "'s name: ";
-        cin >> p[i].name;
-        cout << "Enter speaker " << n << "'s telephone number: ";
-        cin >> p[i].phoneNum;
-        cout << "Enter speaker " << n << "'s speaking topic: ";
-        cin >> p[i].topic;
-        cout << "Enter speaker " << n << "'s fee required: ";
-        cin >> p[i].fee;
-        n++;
-    }
-    return p;
+    return ptr;
 }
 
-Speaker chngeEle(Speaker &p){
-    char choice;
+Speaker* chngeEle(Speaker p[]){
+    int choice;
     int strNum;  //Stores the number of the structure the user wants to change.
     cout << "Which structure would you like to access?[0-9] ";
     cin >> strNum;
@@ -265,47 +329,200 @@ Speaker chngeEle(Speaker &p){
         }
     }while(choice != NAME && choice!= PHONE && choice != TOPIC && choice != FEE); 
     
+    Speaker *ptr = new Speaker[10];
+    ptr = p;
+    
     if(choice == NAME){
         cout << "New name: ";
-        //Figure out how to sort through different structure instances???
-        cin >> p[strNum].name;
+        cin >> ptr[strNum].name;
     }
     else if(choice == PHONE){
         //Add of the customer.
         cout << "New telephone number: ";
-        cin >> p[strNum].phoneNum;
+        cin >> ptr[strNum].phoneNum;
     }
     else if(choice == TOPIC){
         cout << "New speaking topic: ";
-        cin >> p[strNum].topic[strNum];
+        cin >> ptr[strNum].topic;
     }
     else{
         cout << "New fee required: ";
-        cin >> p[strNum].fee[strNum];
+        cin >> ptr[strNum].fee;
+        if(ptr[strNum].fee < 0){
+            cout << "INVALID! No negative numbers!" << endl;
+            cout << "Please enter again: ";
+            cin >> ptr[strNum].fee;
+        }
     }
-    return p;
+    return ptr;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-void prntEle(Speaker p, int SIZE){
-    int speekr = 1;
+void prntEle(Speaker p[], int SIZE){
     for(int i=0;i<SIZE;i++){
-        cout << "Speaker #"<<speekr << endl;
+        cout << "Speaker #"<< i+1 << endl;
         cout << "=========" << endl;
+        cout << "Name: " << p[i].name << endl;
+        cout << "Telephone Number: " << p[i].phoneNum << endl;
+        cout << "Speaking Topic: " << p[i].topic << endl;
+        cout << "Fee Required: " << p[i].fee << endl;
+        cout << endl;
     }
 }
+
+void num111(){
+    Movie m1;
+    Movie m2;
+    cout << "Enter movie title: ";
+    cin >> m1.title;
+    cout << "Enter movie director: ";
+    cin >> m1.director;
+    cout << "Enter the year released: ";
+    cin >> m1.year;
+    cout << "Enter the run-time of the movie (in minutes): ";
+    cin >> m1.runTime;
+    cout << "Enter the production cost of the movie: ";
+    cin >> m1.prodCost;
+    cout << "Enter the first year's revenue of the movie: ";
+    cin >> m1.revenue;
+    prtData(m1);
+}
+void prtData(Movie m){
+    cout << "Movie's Title: " << m.title << endl;
+    cout << "Movie's Director: " << m.director << endl;
+    cout << "Movie's Year of Release: " << m.year << endl;
+    cout << "Movie's Run Time (in minutes): " << m.runTime << endl;
+    cout << "Movie's Profit/Loss: $" << m.revenue - m.prodCost << endl;   
+}
+
+void num127(){
+    //Makes the user think they are actually opening a file.
+    string file;
+    cout << "Enter a file name with a '.txt' extention: ";
+    cin >> file;
+    
+    char ch;
+    fstream upper("uppercase.txt", ios::in);
+    fstream lower("lowercase.txt", ios::out);
+    
+    if(upper){
+        //Reads the contents into ch.
+        upper.get(ch);
+ 
+        while(upper){
+            lower.put(tolower(ch));
+            
+            upper.get(ch);
+        }
+    }
+    //Close files.
+    upper.close();
+    lower.close();
+    
+    cout << "Process complete" << endl;
+}
+
+void num128(){
+    const int SIZE = 5;
+    char array[SIZE] = {'1','2','3','4','5'};
+    string fileName;
+    char *ptr; 
+    ptr = array;
+    char array2[SIZE];
+    char *ptr2;
+    ptr2 = array;
+    cout << "Enter a file name with a '.txt' extention" << endl;
+    cin >> fileName;
+    //Adding the contents of the array to the file.
+    cout << "Beginning to add contents of the array to the file " << 
+            fileName << "." << endl;
+    arrayToFile(fileName, ptr, SIZE);
+    cout << "Finished" << endl;
+    cout << endl;
+    cout << "Beginning to read back from the file " << fileName << "." << endl;
+    fileToArray(fileName, ptr2, SIZE);
+    cout << "Finished" << endl;
+    
+    cout << "The contents of the first array: " << endl;
+    for(int i=0;i<SIZE;i++){
+        cout << array[i] << " ";
+    }
+    cout << endl;
+    cout << "The contents of the second array: ";
+    for(int i=0;i<SIZE;i++){ 
+        cout << array2[i] << " ";
+    }
+}
+void arrayToFile(string fileName, char *arr, int SIZE){
+    fstream file;
+    //Opens file in output and binary mode.
+    file.open(fileName.c_str(), ios::out | ios::binary);
+    //Writes the contents of the file into the array.
+    file.write(arr, SIZE);
+    //Closes file.
+    file.close();
+}
+
+void fileToArray(string fileName, char *arr, int SIZE){
+    char ch;
+    fstream file;
+    file.open(fileName.c_str(), ios::in | ios:: binary);
+    file.get(ch);
+    while(file){
+        for(int i=0;i<SIZE;i++){
+        arr[i] = ch;
+        file.get(ch); 
+        }
+    }
+    //Closes file.
+    file.close();
+}
+
+int num1211(){
+    int choice;
+    const int SIZE = 4;
+    Data div;
+    fstream file("compData.txt", ios::out | ios::binary);
+    
+    for(int i=0;i<SIZE;i++){
+        cout << "Enter the name of the division";
+        cin >> div.divName[i];
+        for(int j=0;j<SIZE;j++){
+            cout << "Enter the sales for quarter " << j + 1 << ": $";
+    do{  
+        cin >> div.sales[i][j];
+        if(div.sales[i][j] < 0){
+            cout << "Invalid amount. Please enter again: ";
+    }
+            }while(div.sales[i][j] < 0);
+        }
+    }
+    file.write(reinterpret_cast<char *>(&file), sizeof(file));
+    file.close();
+}
+void num101(){
+    fstream file;
+    string input;
+    string fileName;
+    cout << "Enter the name of a file: (text.txt) " << endl;
+    cin >> fileName;
+    file.open(fileName.c_str(), ios::in);
+    int counter = 0;
+    while(file >> input){
+        cout << input << endl;
+        counter++;
+        if(counter == 10){
+            break;
+        }
+    }
+    if(counter == 10){
+            cout << "Unable to display full file";
+        }
+        else{
+            cout << "The full file has been displayed for your viewing pleasure";
+        }
+    file.close();
+}
+
 bool playAgain(){
     cout << endl;
     cout << "Do you want to enter again? [y/n]:  ";
