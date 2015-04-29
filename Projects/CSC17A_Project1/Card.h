@@ -11,8 +11,9 @@
 struct Card{
     string color;
     int number;
-    string action;
+    int action;
     bool wild;
+    string strAction;
 };
 
 
