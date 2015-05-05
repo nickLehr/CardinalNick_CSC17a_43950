@@ -5,21 +5,19 @@
  * Created on April 6, 2015, 7:12 PM
  */
 
-//Use char array to get players name (lol) sry lehr;
 
 //Libs
 #include <cstdlib>
 #include <iostream>
-#include <iomanip>
 #include <cstring>
-#include <vector>
-#include <string>
 #include <ctime>
+#include <fstream>
 using namespace std;
 enum Action { blank, DRAW2, DRAW4, WILD, SKIP, REVERSE };
 
 //User Libraries
 #include "Card.h"
+#include "Player.h"
 //Functions
 void changeActionCard(int &, int &, int &, string &); //Adds the action cards to un-shuffled deck.
 void shuffleDeck(Card *, int &); //Shuffles deck and returns the pointer to the deck.
@@ -29,13 +27,14 @@ Card* fillHand(Card *, Card *, int&);//Fills players hands with random cards fro
 void outputHand(Card *, int); //Displays the players hand after it is randomly picked from the deck.
 void gameBegin(Card *, int &, Card *, int);//Places the first card of the shuffled deck down.
 Card* gameTurn(Card *, int &, Card *, int &, Card *, int &, Card *, int &, int &);//Handles all actions of players turn.
-bool checkCard(Card *, Card *, int &);//Checks to see if the card placed is valid
-int cardPlace(Card *, int);
+bool checkCard(Card *, Card *);//Checks to see if the card placed is valid
+int cardPlace(Card *, int); //Outputs players hand and reads in their choice.
 Card* drawCard(Card *, int &, Card *, int &); //Draws a card from the deck.
 void checkAction(Card *, int &, Card *, int &, Card *, int &);//Checks what action card was placed.
-Card* aiTurn(Card *, int &, Card *, int &,  Card *, int &, Card *, int &, int &);//AI's turn.
-void removeCard(Card *, int &, int &, int &);
-void dpOut(Card *, int);
+void removeCard(Card *, int &, int &, int &);//Removes the card chosen from the players hand. 
+void dpOut(Card *, int);//Outputs the discard pile.
+void pOrD(bool, Card *, int, Card *, int); //Checks whether a card is drawn or placed;
+void fileIO(); //Writes the players name to a file and then reads them out of the file.
 
 int main(int argc, char** argv) {
     srand(time(0));
@@ -50,33 +49,37 @@ int main(int argc, char** argv) {
     Card *dpPtr;
     dpPtr = discardPile;
     int turn = 1;
+    fileIO();
     resetDeck(deckPtr, size);
-    //outputDeck(deck, size);
     shuffleDeck(deckPtr, size);
     Card *hand = new Card[handSize];
     Card *hand2 = new Card[handSize2];
     cout << "Welcome to Uno!" << endl;
+    cout << "DP = Discard Pile!" << endl;
     hand = fillHand(hand, deckPtr, size);
     hand2 = fillHand(hand2, deckPtr, size);
     gameBegin(deckPtr, size, dpPtr, dpSize);
     bool won = false;
     while(won == false){
-        cout << "Your turn!" << endl;
-        cout << "***********************************************************" << endl;
-        turn = 1;
+        cout << "Player 1's turn!" << endl;
         dpOut(discardPile, turn);
         hand = gameTurn(hand, handSize, hand2, handSize2, dpPtr, dpSize, deckPtr, size, turn);
-        outputHand(hand, handSize);
-        cout << "************************************************************************" << endl;
-        turn = 2;
+        if(handSize2 == 0 || handSize == 0){
+            turn = 1;
+            won == true;
+            break;
+        }
+        cout << "Player 2's turn!" << endl;
         dpOut(discardPile, turn);
         hand2 = gameTurn(hand2, handSize2, hand, handSize, dpPtr, dpSize, deckPtr, size, turn);
-        outputHand(hand2, handSize2);
         if(handSize2 == 0 || handSize == 0){
+            turn = 2;
             won == true;
             break;
         }
     }
+    cout << "Player " << turn << " has placed their last card!" << endl;
+    cout << "Player " << turn << " wins!" << endl;
     delete [] hand;
     delete [] hand2;
     return 0;
@@ -163,7 +166,6 @@ void resetDeck(Card *deck, int &size){
              count++;
         }
     }
-    //deck[90].action = DRAW2; //Not sure why this is here.
     //Adds the missing 9's to the deck.
     deck[97].number = 9;
     deck[97].color = "Green";
@@ -174,19 +176,12 @@ void resetDeck(Card *deck, int &size){
     deck[99].number = 9;
     deck[99].color = "Yellow";
     deck[99].wild = false;
-    for(int i=100;i<105;i++){//Adds wilds to the deck.
+    for(int i=100;i<108;i++){//Adds wilds to the deck.
         deck[i].action = WILD;
         deck[i].number = -1;
         deck[i].wild = true;
         deck[i].color = "Wild";
         deck[i].strAction = "Wild";
-    }
-    for(int i=104;i<108;i++){//Adds wild draw4's to the deck.
-        deck[i].action = DRAW4;
-        deck[i].number = -1;
-        deck[i].wild = true;
-        deck[i].color = "Wild";
-        deck[i].strAction = "Draw4";
     }
 }
 
@@ -216,11 +211,6 @@ Card* fillHand(Card *hand, Card *deck, int &size){
         swap(deck[randCrd],deck[size-1]);
         size--;
     }
-    //hand[0].action = DRAW4;
-    //hand[0].number = -1;
-   // hand[0].wild = true;
-    //hand[0].color = "Wild";
-    //hand[0].strAction = "Draw4";
     return hand;
 }
 
@@ -241,13 +231,6 @@ void gameBegin(Card *deck, int &size, Card *discardPile, int dpSize){
         gameBegin(deck, size, discardPile, dpSize);
     }
     else{
-        if(deck[randCrd].number < 0){
-            cout << deck[randCrd].strAction << " ";
-        }
-        else{
-            cout << deck[randCrd].number << " ";
-        }
-        cout << deck[randCrd].color << endl;
         discardPile[0].action = deck[randCrd].action;
         discardPile[0].color = deck[randCrd].color;
         discardPile[0].number = deck[randCrd].number;
@@ -260,87 +243,55 @@ void gameBegin(Card *deck, int &size, Card *discardPile, int dpSize){
 
 Card* gameTurn(Card *hand, int &handSize, Card *hand2, int &hand2Size, Card *discardPile, int &dpSize, Card *deck, int &deckSize, int &turn){
     int choice = cardPlace(hand, handSize); //Stores the choice of the users card.
-    bool accepted = false;
     bool drew = false;
+    bool accepted = false;
+    Card *newHand;
     Card cardPlaced[1]; //Stores the card that the user attempts to place.
     Card *cpPtr;
     cpPtr = cardPlaced;
-    Card *newHand;
-    while(choice < 0){
-        choice = cardPlace(hand, handSize);
-    }
     if(choice == 109){
         newHand = drawCard(hand, handSize, deck, deckSize);
         drew = true;
-        accepted = true;
+    }
+    if(choice < 0){
+        choice = cardPlace(hand, handSize);
     }
     if(drew == false){
-        cpPtr[0].action =  hand[choice-1].action;
-        cpPtr[0].color =  hand[choice-1].color;
-        cpPtr[0].number =  hand[choice-1].number;
-        cpPtr[0].wild =  hand[choice-1].wild;
+    cpPtr[0].action = hand[choice-1].action;
+    cpPtr[0].color = hand[choice-1].color;
+    cpPtr[0].number = hand[choice-1].number;
+    cpPtr[0].strAction = hand[choice-1].strAction;
+    cpPtr[0].wild = hand[choice-1].wild;
+    accepted = checkCard(cpPtr, discardPile);
+    }
+    while(accepted == false && drew == false){
+        cpPtr[0].action = hand[choice-1].action;
+        cpPtr[0].color = hand[choice-1].color;
+        cpPtr[0].number = hand[choice-1].number;
         cpPtr[0].strAction = hand[choice-1].strAction;
-        accepted = checkCard(cpPtr, discardPile, dpSize);
-    }
-    while(accepted == false){//If card is invalid loops until it is.
-        choice = cardPlace(hand, handSize);
-        cpPtr[0].action =  hand[choice-1].action;
-        cpPtr[0].color =  hand[choice-1].color;
-        cpPtr[0].number =  hand[choice-1].number;
-        cpPtr[0].wild =  hand[choice-1].wild;
-        cpPtr[0].strAction = hand[choice-1].strAction;
-        accepted = checkCard(cpPtr, discardPile, dpSize);
-    }
-        if(drew == true){
-            cout << "You drew card: ";
-            if(newHand[handSize-1].number < 0){
-                cout << newHand[handSize-1].color << " " << newHand[handSize-1].strAction;
-            }
-            else{
-                cout << newHand[handSize-1].color << " " << newHand[handSize-1].number;
-            }
+        cpPtr[0].wild = hand[choice-1].wild;
+        accepted = checkCard(cpPtr, discardPile);
+        if(accepted == false){
+            choice = cardPlace(hand, handSize);
         }
-        else{
-            cout << "You placed card: " << choice << endl;
-            if(discardPile[0].number < 0){
-                cout << discardPile[0].color << " " << discardPile[0].strAction;
-            }
-            else{
-                cout << discardPile[0].color << " " << discardPile[0].number;
-            }
-        }
-    cout << endl;
-    if(drew == false && turn == 1){
-        //if(discardPile[0].number < 0){
-        //    checkAction(hand2, hand2Size, deck, deckSize, discardPile, turn);  
-        //}
-        //else{
-            removeCard(hand,handSize,choice,turn);
-            //turn = 2;
-        //}
     }
-    else if(drew == false && turn == 2){
-        //if(discardPile[0].number < 0){
-        //    checkAction(hand, handSize, deck, deckSize, discardPile, turn);  
-        //}
-        //else{
-            removeCard(hand2,hand2Size,choice,turn);
-            //turn = 1;
-        //}
+    if(drew == false){
+        checkAction(hand, handSize, deck, deckSize, discardPile, turn);
     }
+    pOrD(drew, newHand, handSize, discardPile, choice);
     if(drew == true){
         return newHand;
     }
     else{
+        removeCard(hand, handSize, choice, turn);
         return hand;
     }
 }
 
-bool checkCard(Card *cardPlaced, Card *discardPile, int &dpSize){
+bool checkCard(Card *cardPlaced, Card *discardPile){
     if(cardPlaced[0].color == discardPile[0].color || 
             cardPlaced[0].number == discardPile[0].number || 
             cardPlaced[0].wild == true){
-            dpSize++;
             discardPile[0].action = cardPlaced[0].action;
             discardPile[0].color = cardPlaced[0].color;
             discardPile[0].number = cardPlaced[0].number;
@@ -375,10 +326,6 @@ int cardPlace(Card *hand, int handSize){
     return choice;
 }
 
-Card* aiTurn(Card *hand, int &handSize, Card *hand2, int &hand2Size, Card *deck, int &deckSize, Card *discardPile, int &dpSize, int &turn){
-
-}
-
 Card* drawCard(Card *hand, int &handSize, Card *deck, int &deckSize){
     Card *tempHnd = new Card[handSize+1]; //Stores the hand passed in and adds one element.
     for(int i=0;i<handSize;i++){
@@ -400,37 +347,9 @@ Card* drawCard(Card *hand, int &handSize, Card *deck, int &deckSize){
 }
 
 void checkAction(Card *hand, int &handSize, Card *deck, int &deckSize, Card *discardPile, int &turn){
-    if(discardPile[0].action == DRAW2){
-        cout << "Two cards have been added to your enemy's hand!" << endl;
-        for(int i=0;i<2;i++){
-            hand = drawCard(hand, handSize, deck, deckSize);
-        }
-    }
-    else if(discardPile[0].action == DRAW4){
-        cout << "Four cards have been added to your enemy's hand!" << endl;
-        for(int i=0;i<4;i++){
-            hand = drawCard(hand, handSize, deck, deckSize);
-        }
+    if(discardPile[0].action == WILD){
         int pColor;
-        string pColors;//Possibly make a function for this.
-        cout << "You placed a wild! Choose a color!" << endl;
-        cout << "1) Red " << endl << "2) Blue " << endl << "3) Green " << endl 
-                << "4) Yellow" << endl;
-        cin >> pColor;
-        while(pColor < 0 && pColor > 4){
-            cout << "Please choose a valid number." << endl;
-            cin >> pColor;
-        }
-        if(pColor==1){pColors = "Red";}
-        else if(pColor==2){pColors = "Blue";}
-        else if(pColor==3){pColors = "Green";}
-        else{pColors == "Yellow";}
-        discardPile[0].color = pColors;
-        discardPile[0].number = -1;
-    }
-    else if(discardPile[0].action == WILD){
-        int pColor;
-        string pColors;//Possibly make a function for this.
+        string pColors;
         cout << "You placed a wild! Choose a color!" << endl;
         cout << "1) Red " << endl << "2) Blue " << endl << "3) Green " << endl 
                 << "4) Yellow" << endl;
@@ -455,19 +374,68 @@ void checkAction(Card *hand, int &handSize, Card *deck, int &deckSize, Card *dis
     }
 }
 void removeCard(Card *hand, int &handSize, int &choice, int &turn){
-    cout << "Player " << turn << endl;
-    cout << "Card Removed: " << hand[choice-1].color << hand[choice-1].number << hand[choice-1].strAction << endl;
     swap(hand[choice-1], hand[handSize-1]);
     handSize--;
-    cout << "****************************************************** " << endl; 
+    cout << "Your turn is over!" << endl << endl << endl << endl;
 }
 
 void dpOut(Card *discardPile, int turn){
-    cout << "Player " << turn << endl;
     if(discardPile[0].number < 0){
             cout << "DP: " << discardPile[0].color << " " << discardPile[0].strAction << endl;
         }
         else{
             cout << "DP: " << discardPile[0].color << " " << discardPile[0].number << endl;
         }
+}
+
+void pOrD(bool drew, Card *newHand, int handSize, Card *discardPile, int choice){
+    if(drew == true){
+        cout << "You drew card: ";
+        if(newHand[handSize-1].number < 0){
+            cout << newHand[handSize-1].color << " " << newHand[handSize-1].strAction <<endl<<endl<<endl<<endl;
+        }
+        else{
+            cout << newHand[handSize-1].color << " " << newHand[handSize-1].number <<endl<<endl<<endl<<endl;
+        }
+    }
+    else{
+        cout << "You placed card: " << choice << endl;
+        if(discardPile[0].number < 0){
+            cout << discardPile[0].color << " " << discardPile[0].strAction << endl;
+        }
+        else{
+            cout << discardPile[0].color << " " << discardPile[0].number << endl;
+        }
+    }
+}
+
+void fileIO(){
+    Player g;
+    Player p;
+    Player p2;
+    Player g2;
+    int turn = 1;
+    fstream statsFile;
+    const int size = 20;
+    cout << "Enter your name Player " << turn << endl;
+    cin.getline(g.name, size, '\n');
+    statsFile.open("player1.txt", ios::out | ios::binary);
+    statsFile.write((char*)&g, sizeof(Player));
+    statsFile.close();
+    turn++;
+    cout << "Enter your name Player " << turn << endl;
+    cin.getline(p.name, size, '\n');
+    statsFile.open("player2.txt", ios::out | ios::binary);
+    statsFile.write((char*)&p, sizeof(Player));
+    statsFile.close();
+    
+    statsFile.open("player1.txt", ios::in | ios::binary);
+    statsFile.read((char*)&g2, sizeof(Player));
+    cout << "Welcome " << g2.name << "!" << endl;
+    statsFile.close();
+    statsFile.open("player2.txt", ios::in | ios::binary);
+    statsFile.read((char*)&p2, sizeof(Player));
+    cout << "Welcome " <<  p2.name << "!" << endl;
+    statsFile.close();
+    cout << "HAVE FUN PLAYING UNO!" << endl << endl << endl;
 }
