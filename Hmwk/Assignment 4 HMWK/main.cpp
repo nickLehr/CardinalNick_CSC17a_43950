@@ -11,6 +11,12 @@
 #include "Employee.h"
 #include "Car.h"
 #include "Inventory.h"
+#include "RetailItem.h"
+#include "Numbers.h"
+#include "DayOfYear.h"
+#include "DayOfYearv2.h"
+#include "NumDays.h"
+#include "Month.h"
 using namespace std;
 
 //Global Constants Here!!!
@@ -26,6 +32,11 @@ void problem4();
 void problem5();
 void problem6();
 void problem7();
+void problem8();
+void problem9();
+void problem10();
+
+
 
 //Begin Execution Here!!!
 int main(int argv,char *argc[]){
@@ -41,20 +52,26 @@ int main(int argv,char *argc[]){
         case 5:    problem5();break;
         case 6:    problem6();break;
         case 7:    problem7();break;
+        case 8:    problem8();break;
+        case 9:    problem9();break;
+        case 10:    problem10();break;
         default:   def(inN);}
     }while(inN>=1&&inN<=10);
-    return 0;//If midterm not perfect, return something other than 1
+    return 0;
 }
 
 void Menu(){
-    cout<<"Menu for the Midterm"<<endl;
-    cout<<"Type 1 for problem 1"<<endl;
-    cout<<"Type 2 for problem 2"<<endl;
-    cout<<"Type 3 for problem 3"<<endl;
-    cout<<"Type 4 for problem 4"<<endl;
-    cout<<"Type 5 for problem 5"<<endl;
-    cout<<"Type 6 for problem 6"<<endl;
-    cout<<"Type 7 for problem 7"<<endl;
+    cout<<"Menu for Assignment 4"<<endl;
+    cout<<"Type 1 for problem 13.1"<<endl;
+    cout<<"Type 2 for problem 13.2"<<endl;
+    cout<<"Type 3 for problem 13.3"<<endl;
+    cout<<"Type 4 for problem 13.6"<<endl;
+    cout<<"Type 5 for problem 13.5"<<endl;
+    cout<<"Type 6 for problem 14.1"<<endl;
+    cout<<"Type 7 for problem 14.2"<<endl;
+    cout<<"Type 8 for problem 14.3"<<endl;
+    cout<<"Type 9 for problem 14.4"<<endl;
+    cout<<"Type 10 for problem 14.7"<<endl;
     cout<<"Type anything else to exit \n"<<endl;
 }
 
@@ -65,12 +82,12 @@ int getN(){
 }
 
 void problem1(){
-        cout<<"In problem # 1"<<endl<<endl;
-            Date date;
+        cout<<"In problem # 13.1"<<endl<<endl;
+    Date date;
     int day;
     int year;
     int month;
-    cout << "Enter the month of the year: "; 
+    cout << "Enter the month of the year as an integer: "; 
     cin >> month;
     date.setMonth(month);
     cout << "Enter the day of the year: ";
@@ -85,11 +102,12 @@ void problem1(){
     date.standardDate(month,day,year);
     cout << endl;
     date.mlaDate(month,day,year);
+    
     cout<<endl<<endl<<endl;
 }
 
 void problem2(){
-        cout<<"In problem # 2"<<endl<<endl;
+        cout<<"In problem # 13.2"<<endl<<endl;
     Employee susan("Susan Meyers", 47899, "Accounting", "Vice President");
     Employee mark("Mark Jones", 39119, "IT", "Programmer");
     Employee joy("Joy Rogers", 81774, "Manufacturing", "Engineer");
@@ -103,7 +121,7 @@ void problem2(){
 }
 
 void problem3(){
-        cout<<"In problem # 3"<<endl<<endl;
+        cout<<"In problem # 13.3"<<endl<<endl;
     int yearModel;
     string make;
     cout << "Enter the year your car was made: ";
@@ -128,7 +146,7 @@ void problem3(){
 }
 
 void problem4(){
-        cout<<"In problem # 4"<<endl<<endl;
+        cout<<"In problem # 13.6"<<endl<<endl;
     int itemNumber;
     int quantity;
     float cost;
@@ -144,18 +162,112 @@ void problem4(){
     cout << "Quantity: " << ralphs.getQuantity() << endl;
     cout << "Cost: " << ralphs.getCost() << endl;
     cout << "Total cost: " << ralphs.getTotalCost() << endl;  
+    
+    cout<<endl<<endl<<endl;
 }
 
 void problem5(){
-        cout<<"In problem # 5"<<endl<<endl;
+        cout<<"In problem # 13.5"<<endl<<endl;
+        
+    RetailItem item1("Jacket", 12, 59.95);
+    RetailItem item2("Designer Jeans", 40, 34.95);
+    RetailItem item3("Shirt", 20, 24.95);
+    
+    cout << "Item #1 " <<item1.getDesc()<<" "<< item1.getUnits()<<" "<<item1.getPrice();
+    cout << endl;
+    cout << "Item #2 " <<item2.getDesc()<<" "<< item2.getUnits()<<" "<<item2.getPrice();
+    cout << endl;
+    cout << "Item #3 " <<item3.getDesc()<<" "<< item3.getUnits()<<" "<<item3.getPrice();
+    
+    cout<<endl<<endl<<endl;
 }
 
 void problem6(){
-        cout<<"In problem # 6"<<endl<<endl;
+        cout<<"In problem # 14.1"<<endl<<endl;
+    int nums;
+    cout << "Enter a number between 0-9999" << endl;
+    cin >> nums;
+    while(nums < 0 || nums > 10000){
+        cout << "Enter a number between 0-9999" << endl;
+        cin >> nums;
+    }
+    cout << "Your input: ";
+    Numbers num(nums);
+    num.print();
+    
+    cout<<endl<<endl<<endl;
 }
 
 void problem7(){
-        cout<<"In problem # 7"<<endl<<endl;
+        cout<<"In problem # 14.2"<<endl<<endl;
+    int day;
+    cout << "Enter a day 1-365: " << endl;
+    cin >> day;
+    DayOfYear date(day);
+    cout << "You entered: " << endl;
+    date.print();
+    
+    cout<<endl<<endl<<endl;
+}
+
+void problem8(){
+        cout<<"In problem # 14.3"<<endl<<endl;
+    int day;
+    string month;
+    cout << "Enter a month of the year using an uppercase for the first letter: " << endl;
+    cin >> month;
+    cout << "Enter a day of the year 1-31: " << endl;
+    cin >> day;
+    DayOfYearv2 date(month, day);
+    cout << "You entered: ";
+    date.printv2();
+    cout << endl;
+    cout << "The next day is: ";
+    if(day != 31){
+        date++;
+    }
+    else{
+        date.print();
+    }
+    
+    cout<<endl<<endl<<endl;
+}
+
+void problem9(){
+        cout<<"In problem # 14.4"<<endl<<endl;
+    int hours;
+    cout << "Enter how many hours you worked this week: ";
+    cin >> hours;
+    NumDays tri(hours);
+    cout << "Your hours converted into days is: ";
+    tri.convert(hours);
+    
+    cout<<endl<<endl<<endl;
+}
+
+void problem10(){
+        cout<<"In problem # 14.7"<<endl<<endl;
+    string month;
+    int monthNum;
+    cout << "Please type in a month: ";
+    cin >> month;
+    Month kyle(month);
+    kyle.print();
+    cout << endl;
+    cout << "The previous month is: ";
+    kyle--;
+    kyle.print();
+    cout << endl;
+    cout << "Please enter a month 1-12: ";
+    cin >> monthNum;
+    Month nick(monthNum);
+    nick.print();
+    cout << endl;
+    cout << "The next month is: ";
+    nick++;
+    nick.print();
+    
+    cout<<endl<<endl<<endl;
 }
 
 void def(int inN){

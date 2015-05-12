@@ -6,8 +6,14 @@
                    projectFiles="true">
       <itemPath>Car.h</itemPath>
       <itemPath>Date.h</itemPath>
+      <itemPath>DayOfYear.h</itemPath>
+      <itemPath>DayOfYearv2.h</itemPath>
       <itemPath>Employee.h</itemPath>
       <itemPath>Inventory.h</itemPath>
+      <itemPath>Month.h</itemPath>
+      <itemPath>NumDays.h</itemPath>
+      <itemPath>Numbers.h</itemPath>
+      <itemPath>RetailItem.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -18,8 +24,14 @@
                    projectFiles="true">
       <itemPath>Car.cpp</itemPath>
       <itemPath>Date.cpp</itemPath>
+      <itemPath>DayOfYear.cpp</itemPath>
+      <itemPath>DayOfYearv2.cpp</itemPath>
       <itemPath>Employee.cpp</itemPath>
       <itemPath>Inventory.cpp</itemPath>
+      <itemPath>Month.cpp</itemPath>
+      <itemPath>NumDays.cpp</itemPath>
+      <itemPath>Numbers.cpp</itemPath>
+      <itemPath>RetailItem.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -52,6 +64,14 @@
       </item>
       <item path="Date.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="DayOfYear.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="DayOfYear.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="DayOfYearv2.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="DayOfYearv2.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Employee.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Employee.h" ex="false" tool="3" flavor2="0">
@@ -59,6 +79,22 @@
       <item path="Inventory.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Inventory.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Month.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Month.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="NumDays.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="NumDays.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Numbers.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Numbers.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="RetailItem.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="RetailItem.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -91,6 +127,14 @@
       </item>
       <item path="Date.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="DayOfYear.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="DayOfYear.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="DayOfYearv2.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="DayOfYearv2.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="Employee.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Employee.h" ex="false" tool="3" flavor2="0">
@@ -98,6 +142,22 @@
       <item path="Inventory.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="Inventory.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Month.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Month.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="NumDays.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="NumDays.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="Numbers.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Numbers.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="RetailItem.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="RetailItem.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
