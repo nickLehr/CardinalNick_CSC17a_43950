@@ -13,9 +13,11 @@ class GameState{
     private:
         int turns;
         bool won;
-        Card p1Hand[];
-        Card p2Hand[];
-        int size;
+        Card *p1Hand;
+        Card *p2Hand;
+        Card dpPile[1];
+        int p2Size;
+        int p1Size;
     public:
         GameState();
         ~GameState();
@@ -23,10 +25,17 @@ class GameState{
         int getTurn();
         void setTurn();
         void setWon();
-        void setHand(Deck,int);
-        Card getHand();
+        void setHand(Deck&,int);
+        Card* getHand(int);
+        Card getDP();
+        void setDP(Card);
+        void outputDP();
+        int cardChoice(Card*, int);
+        bool checkCard(Card*,int);
+        void removeCard(Card*,int&,int,int);
+        bool operator==(const Card*);
+        bool operator!=(const Card*);
 };
-
 
 #endif	/* GAMESTATE_H */
 

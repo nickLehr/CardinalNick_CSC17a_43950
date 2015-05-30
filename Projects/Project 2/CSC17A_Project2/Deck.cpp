@@ -131,10 +131,15 @@ Card Deck::draw(){
     Card ret = gameDeck[0];
     //Deletes the old deck.
     delete [] gameDeck;
+    
     gameDeck = newDeck;
-    cout << "Hello" << endl;
-    Card yo;
-    yo = ret;
-    cout << "hello";
     return ret;
+}
+
+void Deck::shuffleDeck(){
+    int shuffle = 0;
+    for(int i=0;i<size;i++){
+        shuffle = rand() % 108 + 0;
+        swap(gameDeck[i],gameDeck[shuffle]);
+    }
 }

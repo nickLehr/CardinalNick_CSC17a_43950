@@ -11,8 +11,8 @@ using namespace std;
 
 Card::Card(){
     color = "NC";
-    number = 0;
-    action = 0;
+    number = -3;
+    action = -5;
     wild = false;
     strAction = "NSA"; 
 }
