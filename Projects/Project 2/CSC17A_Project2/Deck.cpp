@@ -43,7 +43,7 @@ void Deck::outputDeck(){
             cout << i <<  "Card Value: " << gameDeck[i].getStrAction();
         }
         else{
-            cout << i <<"Card Value: " << gameDeck[i].getNum();
+            cout << i << "Card Value: " << gameDeck[i].getNum();
         }
         cout << " Color: " << gameDeck[i].getColor();
         cout << endl;
@@ -117,7 +117,7 @@ void Deck::addWilds(){
     }
     for(int i=104;i<109;i++){
         gameDeck[i].setWild(true);
-        gameDeck[i].setColor("Draw4");
+        gameDeck[i].setColor("Wild");
         gameDeck[i].setStrAction("Draw4");
         gameDeck[i].setIntAction(DRAW4);
     }
@@ -133,6 +133,7 @@ Card Deck::draw(){
     delete [] gameDeck;
     
     gameDeck = newDeck;
+    
     return ret;
 }
 

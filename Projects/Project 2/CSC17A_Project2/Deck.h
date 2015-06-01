@@ -17,12 +17,12 @@ class Deck{
         int size;
     public:
         Deck();
-        ~Deck();
+        virtual ~Deck();
         void setUp();
-        Deck* setUpHand();
+        void setUpHand();
         void shuffleDeck();
         void outputDeck();
-        Card draw();
+        virtual Card draw();
 };
 #endif	/* DECK_H */
 

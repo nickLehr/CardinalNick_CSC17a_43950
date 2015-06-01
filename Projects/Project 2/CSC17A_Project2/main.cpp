@@ -13,7 +13,6 @@
 #include "GameState.h"
 using namespace std;
 
-
 int main(int argc, char** argv) {
     srand(time(0));
     GameState UNO;
@@ -21,13 +20,22 @@ int main(int argc, char** argv) {
     cardDeck.setUp();
     cardDeck.shuffleDeck();
     //cardDeck.outputDeck();
-    UNO.setHand(cardDeck,1);
-    UNO.setHand(cardDeck,2);
+    UNO.setHand(cardDeck);
+    UNO.setHand(cardDeck);
     UNO.setDP(cardDeck.draw());
     UNO.outputDP();
+    bool accepted = false; //Controls whether the card the user placed is accepted.
     do{
-    UNO.checkCard(UNO.getHand(1),1);
+        do{
+            accepted = UNO.checkCard(UNO.getHand(1),1,cardDeck);
+        }while(accepted == false);
+    UNO.outputDP();
+    accepted = false;
+        do{
+            accepted = UNO.checkCard(UNO.getHand(2),2,cardDeck);
+        }while(accepted == false);
+    UNO.outputDP();
+    accepted = false;
     }while(UNO.getWon() == false);
     return 0;
 }
-
