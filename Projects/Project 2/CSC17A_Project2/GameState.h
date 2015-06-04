@@ -19,12 +19,13 @@ class GameState{
         Card dpPile[1];
         int p1Size;
         int p2Size;
+        bool skipped;
     public:
         GameState();
         virtual ~GameState();
         bool getWon();
         int getTurn();
-        void setTurn();
+        void setTurn(int);
         void setWon();
         void setHand(Deck&);
         Card* getHand(int);
@@ -35,9 +36,22 @@ class GameState{
         int cardChoice(Card*, int);
         bool checkCard(Card*,int,Deck&);
         void removeCard(Card*,int&,int,int,bool);
-        bool addNewCard(int,Deck&);
-        bool checkAction(int);
+        bool addNewCard(int,Deck&,bool);
+        bool checkAction(Deck&,int);
         void checkWin();
+        void checkWild();
+        bool checkSkip();
+        void checkDrawAct(Deck&);
+        void setUp(int);
+        //AI Functions
+        void AI(Deck&);
+        int checkAI();
+        void AIDraw(Deck&);
+        void AIRemove(int);
+        void checkAIWild();
+        void checkDrawAI(Deck&);
+        void setSkip(bool);
+        bool getSkip();
         //virtual Card draw();
         bool operator==(const Card*);
         bool operator!=(const Card*);
@@ -47,4 +61,3 @@ class GameState{
 };
 
 #endif	/* GAMESTATE_H */
-
