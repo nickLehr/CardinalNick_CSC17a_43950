@@ -9,6 +9,7 @@
 #define	GAMESTATE_H
 #include "Card.h"
 #include "Deck.h"
+#include "Player.h"
 
 class GameState{
     private:
@@ -21,8 +22,11 @@ class GameState{
         int p2Size;
         bool skipped;
     public:
+        //Constructor
         GameState();
+        //Destructor
         virtual ~GameState();
+        //Mutators/Accessors
         bool getWon();
         int getTurn();
         void setTurn(int);
@@ -32,8 +36,9 @@ class GameState{
         Card getDP();
         void setDP(Card);
         int getSize(Card*);
+        //Game functionality.
         void outputDP();
-        int cardChoice(Card*, int);
+        int cardChoice();
         bool checkCard(Card*,int,Deck&);
         void removeCard(Card*,int&,int,int,bool);
         bool addNewCard(int,Deck&,bool);
@@ -42,7 +47,6 @@ class GameState{
         void checkWild();
         bool checkSkip();
         void checkDrawAct(Deck&);
-        void setUp(int);
         //AI Functions
         void AI(Deck&);
         int checkAI();
@@ -52,12 +56,15 @@ class GameState{
         void checkDrawAI(Deck&);
         void setSkip(bool);
         bool getSkip();
-        //virtual Card draw();
+        //Exception function for the try catch.
+        void exception(int);
+        //
         bool operator==(const Card*);
         bool operator!=(const Card*);
-        //int operator++(int);
-        //friend std::ostream& operator<<(std::ostream&, Card*);
-        //Overload -- for size.
+        //File IO / Try-Catch function.
+        void nameSet();
+        //Menu
+        int menu();
 };
 
 #endif	/* GAMESTATE_H */

@@ -17,10 +17,12 @@ class Player : protected Person{
         Player(){};
         int getAge();
         void setAge(int);
-        //Gets and sets the name of the AI.
+        //Gets and sets the name of the AI. 
+        //Overload the getName and setName in Person class.
         virtual char* getName();
         virtual void setName(char*);
         //Gets and sets the alias of the AI.
+        //Overload the getAlias and setAlias in Person class.
         virtual char* getAlias();
         virtual void setAlias(char*);
 };

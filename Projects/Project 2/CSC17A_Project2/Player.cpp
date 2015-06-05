@@ -9,6 +9,7 @@
 #include <string>
 #include <iostream>
 #include "Player.h"
+#include "GameState.h"
 using namespace std;
 
 int Player::getAge(){
@@ -16,20 +17,22 @@ int Player::getAge(){
 }
 
 void Player::setAge(int a){
-    while(!(cin >> a)){
-        throw "Please enter a valid age.";
+    GameState p;
+    if(!(cin)){
+       throw p;
     }
-    a = age;
+    else{
+        age = a;
+    }
 }
 
-char* Player::getName(){
+char* Player::getName(){ 
     return AIname;
 }
 void Player::setName(char* n){
-//    for(int i=0;i<20;i++){
-//        swap(n[i],n[i+1]);
-//    }
-    name = n;
+    for(int i = 0; i < sizeof(n);i++){
+        AIname[i] = n[i];
+    }
 }
 char* Player::getAlias(){
     return AIalias;
@@ -38,5 +41,5 @@ void Player::setAlias(char* a){
     for(int i=0;i<20;i++){
         swap(a[i],a[i+1]);
     }
-    alias = a;
+    AIalias = a;
 }

@@ -14,13 +14,12 @@ class Person{
         char* alias;
     public:
         Person(){};
+        //Declared virtual in order to be overridden by the Player class.
         virtual char* getName();
         virtual void setName(char*);
         virtual char* getAlias();
         virtual void setAlias(char*);
 };
-
-
 
 #endif	/* PERSON_H */
 

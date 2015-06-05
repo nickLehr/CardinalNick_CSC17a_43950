@@ -11,26 +11,25 @@
 #include "Deck.h"
 #include "Card.h"
 #include "GameState.h"
+#include "Player.h"
 using namespace std;
 
 int main(int argc, char** argv) {
     srand(time(0));
     GameState UNO;
     Deck cardDeck;
+    int choice = 0;
     cardDeck.setUp();
     cardDeck.shuffleDeck();
-    //cardDeck.outputDeck();
     UNO.setHand(cardDeck);
     UNO.setHand(cardDeck);
     UNO.setDP(cardDeck.draw());
-    UNO.outputDP();
-    UNO.setUp(1);
-    int game = 0;
-    cout << "Enter 1 or 2" << endl;
-    cin >> game;
+    //UNO.nameSet();
+    choice = UNO.menu();
     bool accepted = false; //Controls whether the card the user placed is accepted.
     do{
-    if(game == 1){
+    if(choice == 1){
+    UNO.outputDP();
         do{
             accepted = UNO.checkCard(UNO.getHand(1),1,cardDeck);
         }while(accepted == false);
@@ -41,7 +40,6 @@ int main(int argc, char** argv) {
             accepted = UNO.checkCard(UNO.getHand(2),2,cardDeck);
         }while(accepted == false);
     }
-    UNO.outputDP();
     accepted = false;
     }
     else{

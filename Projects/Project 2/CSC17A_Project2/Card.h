@@ -27,7 +27,6 @@ class Card{
         void setIntAction(int iA){action = iA;}
         void setNum(int n){number = n;}
         void setWild(bool w){wild = w;}
-        //Card& operator= (const Card& c);
 };
 
 #endif	/* CARD_H */
