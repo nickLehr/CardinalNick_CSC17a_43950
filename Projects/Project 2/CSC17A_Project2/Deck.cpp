@@ -28,6 +28,12 @@ Deck::Deck(){
 Deck::~Deck(){
     delete [] gameDeck;
 }
+
+Deck::Deck(Deck& d){
+    gameDeck = d.gameDeck;
+    size = d.size;
+}
+
 void Deck::setUp(){
     createDeck("Red");
     createDeck("Green");

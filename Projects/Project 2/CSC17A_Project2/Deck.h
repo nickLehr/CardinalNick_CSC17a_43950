@@ -17,6 +17,8 @@ class Deck{
         int size;
     public:
         Deck();
+        //Copy constructor.
+        Deck(Deck&);
         virtual ~Deck();
         void setUp();
         void setUpHand();

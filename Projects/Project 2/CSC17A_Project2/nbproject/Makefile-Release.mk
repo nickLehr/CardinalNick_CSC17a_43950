@@ -38,7 +38,6 @@ OBJECTFILES= \
 	${OBJECTDIR}/Card.o \
 	${OBJECTDIR}/Deck.o \
 	${OBJECTDIR}/GameState.o \
-	${OBJECTDIR}/Person.o \
 	${OBJECTDIR}/Player.o \
 	${OBJECTDIR}/main.o
 
@@ -81,11 +80,6 @@ ${OBJECTDIR}/GameState.o: GameState.cpp
 	${MKDIR} -p ${OBJECTDIR}
 	${RM} "$@.d"
 	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/GameState.o GameState.cpp
-
-${OBJECTDIR}/Person.o: Person.cpp 
-	${MKDIR} -p ${OBJECTDIR}
-	${RM} "$@.d"
-	$(COMPILE.cc) -O2 -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Person.o Person.cpp
 
 ${OBJECTDIR}/Player.o: Player.cpp 
 	${MKDIR} -p ${OBJECTDIR}

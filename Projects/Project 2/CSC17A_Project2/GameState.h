@@ -13,7 +13,7 @@
 
 class GameState{
     private:
-        int p;
+        int turn;
         bool won;
         Card *p1Hand;
         Card *p2Hand;
@@ -38,15 +38,15 @@ class GameState{
         int getSize(Card*);
         //Game functionality.
         void outputDP();
-        int cardChoice();
-        bool checkCard(Card*,int,Deck&);
-        void removeCard(Card*,int&,int,int,bool);
-        bool addNewCard(int,Deck&,bool);
-        bool checkAction(Deck&,int);
-        void checkWin();
+        int cardChoice(Player,Player);
+        bool checkCard(Deck&,Player,Player);
+        void removeCard(int&,int,bool,Player, Player);
+        bool addNewCard(Deck&,bool,Player,Player);
+        bool checkAction(Deck&,int,Player,Player);
+        void checkWin(Player,Player);
         void checkWild();
-        bool checkSkip();
-        void checkDrawAct(Deck&);
+        bool checkSkip(Player,Player);
+        void checkDrawAct(Deck&,Player,Player);
         //AI Functions
         void AI(Deck&);
         int checkAI();
@@ -56,13 +56,17 @@ class GameState{
         void checkDrawAI(Deck&);
         void setSkip(bool);
         bool getSkip();
-        //Exception function for the try catch.
-        void exception(int);
         //
         bool operator==(const Card*);
         bool operator!=(const Card*);
         //File IO / Try-Catch function.
+        void setUp(Player&, Player&);
         void nameSet();
+        void storeStats(Player);
+        //Display stats.
+        void statsOut(Player);
+        //Asks user if they want to check stats.
+        void checkStats(Player);
         //Menu
         int menu();
 };

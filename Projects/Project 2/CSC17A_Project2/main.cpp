@@ -18,36 +18,42 @@ int main(int argc, char** argv) {
     srand(time(0));
     GameState UNO;
     Deck cardDeck;
+    Player p;
+    Player p2;
     int choice = 0;
     cardDeck.setUp();
     cardDeck.shuffleDeck();
     UNO.setHand(cardDeck);
     UNO.setHand(cardDeck);
     UNO.setDP(cardDeck.draw());
-    //UNO.nameSet();
     choice = UNO.menu();
+    bool prompt = true;
     bool accepted = false; //Controls whether the card the user placed is accepted.
     do{
-    if(choice == 1){
+    if(choice == 1){ // Player vs. Player
+        if(prompt){
+            UNO.setUp(p,p2);
+            prompt = false;
+        }
     UNO.outputDP();
         do{
-            accepted = UNO.checkCard(UNO.getHand(1),1,cardDeck);
+            accepted = UNO.checkCard(cardDeck,p,p2);
         }while(accepted == false);
-    UNO.outputDP();
     accepted = false;
+    UNO.outputDP();
     if(UNO.getWon() == false){
         do{
-            accepted = UNO.checkCard(UNO.getHand(2),2,cardDeck);
+            accepted = UNO.checkCard(cardDeck,p,p2);
         }while(accepted == false);
     }
     accepted = false;
     }
-    else{
+    else{   //Player vs. AI
         UNO.setTurn(1);
         UNO.outputDP();
         do{
             if(UNO.getSkip() == false){
-            accepted = UNO.checkCard(UNO.getHand(1),1,cardDeck);
+            accepted = UNO.checkCard(cardDeck,p,p2);
             UNO.setTurn(1);
             }
             else{

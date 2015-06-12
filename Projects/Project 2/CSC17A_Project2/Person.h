@@ -10,15 +10,15 @@
 
 class Person{
     protected:
-        char* name;
-        char* alias;
+        std::string name;
+        int age;
     public:
-        Person(){};
         //Declared virtual in order to be overridden by the Player class.
-        virtual char* getName();
-        virtual void setName(char*);
-        virtual char* getAlias();
-        virtual void setAlias(char*);
+        virtual std::string getName() = 0;
+        virtual void setName() = 0;
+        
+        virtual void setAge() = 0;
+        virtual int getAge() = 0;
 };
 
 #endif	/* PERSON_H */

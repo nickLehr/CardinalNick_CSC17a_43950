@@ -8,38 +8,64 @@
 #include <cstdlib>
 #include <string>
 #include <iostream>
+#include <stdexcept>
 #include "Player.h"
-#include "GameState.h"
 using namespace std;
+
+void Player::exception(int ex){
+    if(ex == 3){
+        cout << "Invalid age, ERROR MESSAGE: " << ex << endl;
+    }
+    cout << "Enter an age";
+    cin.clear();
+    cin.ignore();
+    setAge();
+}
+
+Player::Player(string n, int a){
+    name = n;
+    age = a;
+}
+
+string Player::getName(){
+    return name;
+}
+
+void Player::setName(){
+    string n;
+    cout << "Enter your name: ";
+    cin >> n;
+    name = n;
+    cout << "\nWelcome " << name << "!" << endl;
+}
+        
+void Player::setAge(){
+    int a;
+    cout << "Enter your age: ";
+    cin >> a;
+    try{
+    if(!cin){
+        throw 3;
+    }
+    else{
+        age = a;
+    }
+    }catch(int ex){
+        exception(ex);
+        cin.clear();
+    }
+}
 
 int Player::getAge(){
     return age;
 }
 
-void Player::setAge(int a){
-    GameState p;
-    if(!(cin)){
-       throw p;
-    }
-    else{
-        age = a;
-    }
+ostream &operator<<(ostream &out, Player &p){
+    out << p.name << " is younger and will go first!" << endl<<endl<<endl;
+    return out;
 }
 
-char* Player::getName(){ 
-    return AIname;
-}
-void Player::setName(char* n){
-    for(int i = 0; i < sizeof(n);i++){
-        AIname[i] = n[i];
-    }
-}
-char* Player::getAlias(){
-    return AIalias;
-}
-void Player::setAlias(char* a){
-    for(int i=0;i<20;i++){
-        swap(a[i],a[i+1]);
-    }
-    AIalias = a;
+istream &operator>>(istream &in, Player &p){
+    in >> p.name >> p.age;
+    return in;
 }

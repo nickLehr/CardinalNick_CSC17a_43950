@@ -7,24 +7,29 @@
 
 #ifndef PLAYER_H
 #define	PLAYER_H
+#include <exception>
+#include <stdexcept>
 #include "Person.h"
 class Player : protected Person{
     private:
-        int age;
-        char* AIname;
-        char* AIalias;
     public:
-        Player(){};
-        int getAge();
-        void setAge(int);
-        //Gets and sets the name of the AI. 
-        //Overload the getName and setName in Person class.
-        virtual char* getName();
-        virtual void setName(char*);
-        //Gets and sets the alias of the AI.
-        //Overload the getAlias and setAlias in Person class.
-        virtual char* getAlias();
-        virtual void setAlias(char*);
+        Player(){
+            name = " ";
+            age = 0;
+        }
+        
+        Player(std::string, int);
+        
+        virtual std::string getName();
+        virtual void setName();
+        
+        virtual void setAge();
+        virtual int getAge();
+        
+        void exception(int);
+        
+        friend std::ostream &operator<<(std::ostream& out, Player& p);
+        friend std::istream &operator>>(std::istream& in, Player& p);
 };
 
 #endif	/* PLAYER_H */

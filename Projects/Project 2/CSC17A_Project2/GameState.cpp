@@ -20,7 +20,7 @@ GameState::GameState(){
     p2Size = 7;
     p1Hand = new Card[p1Size];
     p2Hand = new Card[p2Size];
-    p = 1;
+    turn = 1;
     won = false;
     skipped = false;
 }
@@ -58,6 +58,7 @@ void GameState::setDP(Card c){
     dpPile[0].setIntAction(c.getIntAction());
     dpPile[0].setStrAction(c.getStrAction());
     dpPile[0].setWild(c.getWild());
+    
 }
 
 void GameState::outputDP(){
@@ -70,21 +71,21 @@ void GameState::outputDP(){
         }
 }
 
-int GameState::cardChoice(){
+int GameState::cardChoice(Player p,Player p2){
     int choice = 0;
     int size = 0;
     Card* phTemp;
     //If it's player one's turn.
-    if(GameState::p % 2 == 1){
+    if(turn % 2 == 1){
         size = p1Size;
         phTemp = p1Hand;
-        cout << "Player 1, it's your turn!" << endl;
+        cout << p.getName() << " it's your turn!" << endl;
     }
     //If it's player 2's turn.
-    if(GameState::p % 2 == 0){
+    if(turn % 2 == 0){
         size = p2Size;
         phTemp = p2Hand;
-        cout << "Player 2, it's your turn!" << endl;
+        cout << p2.getName() << " it's your turn!" << endl;
     }
     cout << "Which card would you like to place?" << endl;
     cout << "Enter " << size+1 << " to draw a card." << endl; 
@@ -122,28 +123,28 @@ bool GameState::getWon(){
     return won;
 }
 
-bool GameState::checkCard(Card* c, int p, Deck& d){
+bool GameState::checkCard(Deck& d,Player p, Player p2){
     setSkip(false);
     //Controls the card that the user picks.
-    int choice = cardChoice();
+    int choice = cardChoice(p,p2);
     if(choice < 0){
-        choice = cardChoice();
+        choice = cardChoice(p,p2);
     }
     bool draw = false;
     if(choice == 109){
         //If the user drew a card.
-        draw = addNewCard(GameState::p,d,false);
+        draw = addNewCard(d,false,p,p2);
         return draw;
     }
     Card* phTemp;
     int tempSize = 0;
     //If player 1's turn
-    if(GameState::p % 2 == 1){
+    if(turn % 2 == 1){
         phTemp = p1Hand; //Temp stores the player 1's hand.
         tempSize = p1Size;   //Temp stores the player 2's hand size.
     }
     //If Player 2's turn.
-    if(GameState::p % 2 == 0){
+    if(turn % 2 == 0){
         phTemp = p2Hand; //Temp stores the player 2's hand.
         tempSize=p2Size;     //Temp stores the player 2's hand size.
     }
@@ -154,9 +155,9 @@ bool GameState::checkCard(Card* c, int p, Deck& d){
         //Adds the card to the discard pile.
         setDP(phTemp[choice-1]);
         //Checks if the card is a skip card.
-        isSkip = checkAction(d,0);
+        isSkip = checkAction(d,0,p,p2);
         //Removes the card from the players hand.
-        removeCard(c,tempSize,choice,GameState::p,isSkip); 
+        removeCard(tempSize,choice,isSkip,p,p2); 
         return true;
     }
     else{
@@ -165,40 +166,40 @@ bool GameState::checkCard(Card* c, int p, Deck& d){
     }
 }
 
-void GameState::removeCard(Card *c, int &size, int choice, int p, bool a){
+void GameState::removeCard(int &size, int choice, bool a,Player p, Player p2){
     Card* phTemp;
     //If player one's turn.
-    if(GameState::p % 2 == 1){
+    if(turn % 2 == 1){
         phTemp = p1Hand; //Temp stores the player 1's hand.
     }
     //If player two's turn.
-    if(GameState::p % 2 == 0){
+    if(turn % 2 == 0){
         phTemp = p2Hand; //Temp stores the player 2's hand
     }
     //Swaps the card chosen with the last card and then the card is deleted.
     swap(phTemp[choice-1], phTemp[size-1]);
-    if(GameState::p % 2 == 1){
+    if(turn % 2 == 1){
         p1Size--;
         p1Hand = phTemp;
     }
-    if(GameState::p % 2 == 0){
+    if(turn % 2 == 0){
         p2Size--;
         p2Hand = phTemp;
     }
-    if(GameState::p%2 == 0){
-        cout << "Player " << GameState::p%2+2 << " your turn is over."  << endl << endl << endl;
-        cout << "Player " << GameState::p%2+2 << " placed: "; outputDP();  cout<<endl;
+    if(turn%2 == 0){
+        cout << p2.getName() << " your turn is over."  << endl << endl << endl;
+        cout << p2.getName() << " placed: "; outputDP();  cout<<endl;
     }
     else{
-    cout << "Player " << GameState::p%2 << " your turn is over."  << endl << endl << endl;
-    cout << "Player " << GameState::p%2 << " placed: "; outputDP();  cout<<endl;
+    cout << p.getName() << " your turn is over."  << endl << endl << endl;
+    cout << p.getName() << " placed: "; outputDP();  cout<<endl;
     }
     //Increments to the next players turn.
     if(a == true){
-        GameState::p++;
+        turn++;
     }
-    GameState:: p++;
-    checkWin();
+    turn++;
+    checkWin(p,p2);
 }
 
 
@@ -213,8 +214,8 @@ void GameState::removeCard(Card *c, int &size, int choice, int p, bool a){
      return size;
  }
  
- bool GameState::addNewCard(int p, Deck& d, bool draw){
-     if(GameState::p % 2 == 1){
+ bool GameState::addNewCard(Deck& d, bool draw, Player p, Player p2){
+     if(turn % 2 == 1){
     //Allocates a new card array with one extra space.
     Card* newHand = new Card[p1Size+1];
     //Copies contents of the old hand to the new.
@@ -228,11 +229,11 @@ void GameState::removeCard(Card *c, int &size, int choice, int p, bool a){
     //Sets the new hand equal to the old hand.
     p1Hand = newHand;
     if(draw == false){
-    cout << "Player " << GameState::p%2+1 << " your turn is over."  << endl << endl << endl;
-    GameState::p++;
+    cout << p.getName() << " your turn is over."  << endl << endl << endl;
+    turn++;
     }
     }
-     else if(GameState::p % 2 == 0){
+    else if(turn % 2 == 0){
     Card* newHand = new Card[p2Size+1];
         for(int i = 0; i < p2Size; i++){
             newHand[i] = p2Hand[i];
@@ -242,40 +243,45 @@ void GameState::removeCard(Card *c, int &size, int choice, int p, bool a){
     delete [] p2Hand;
     p2Hand = newHand;
     if(draw == false){
-    cout << "Player " << GameState::p%2+1 << " your turn is over."  << endl << endl << endl;
-    GameState::p++;
+    cout << p2.getName() << " your turn is over."  << endl << endl << endl;
+    turn++;
     }
     }
      return true;
  }
  
- bool GameState::checkAction(Deck& d,int ai){
+ bool GameState::checkAction(Deck& d,int ai,Player p, Player p2){
+     Player dummy;
     if(ai==0){
     checkWild();
     }
     else{
         checkAIWild();
     }
-    bool isSkip = checkSkip();
+    bool isSkip = checkSkip(p,p2);
     if(isSkip == true){
         return true;
     }
     if(ai==0){
-    checkDrawAct(d);
+    checkDrawAct(d,dummy,dummy);
     }
     else{
         checkDrawAI(d);
     }
     return false;
 }
- void GameState::checkWin(){
+ void GameState::checkWin(Player p, Player p2){
     if(p1Size == 0){
         won = true;
-        cout << "Player 1 wins!" << endl;
+        cout << p.getName() << " wins!" << endl;
+        storeStats(p);
+        checkStats(p);
     }
     if(p2Size == 0){
         won = true;
-        cout << "Player 2 wins!" << endl;
+        cout << p2.getName() << " wins!" << endl;
+        storeStats(p2);
+        checkStats(p);
     }
  }
  void GameState::checkWild(){
@@ -299,14 +305,14 @@ void GameState::removeCard(Card *c, int &size, int choice, int p, bool a){
     }
 }
  
- bool GameState::checkSkip(){
+ bool GameState::checkSkip(Player p, Player p2){
      //If the card is a skip then isSkip is set to true allowing for the turn to be skipped.
      if(dpPile[0].getIntAction()== SKIP || dpPile[0].getIntAction() == REVERSE){
-        if(GameState::p % 2 == 0){
-            cout << "Player " << (p%2)+1  << " turn has been skipped!" << endl;
+        if(turn % 2 == 0){
+            cout << p.getName() << "'s turn has been skipped!" << endl;
         }
         else{
-            cout << "Player "<< (p%2)+1 << " turn has been skipped!" << endl;
+            cout << p2.getName() << "'s turn has been skipped!" << endl;
         }
         setSkip(true);
         return true;
@@ -314,35 +320,35 @@ void GameState::removeCard(Card *c, int &size, int choice, int p, bool a){
      return false;
 }
  
- void GameState::checkDrawAct(Deck& d){
+ void GameState::checkDrawAct(Deck& d, Player p, Player p2){
     bool draw = false;
     //Adds 2 new cards to the hand if true.
     if(dpPile[0].getIntAction() == DRAW2){
         for(int i = 0; i<2;i++){
             draw = true;
-            p++;
-            addNewCard(GameState::p,d,draw);
-            p--;
+            turn++;
+            addNewCard(d,draw,p,p2);
+            turn--;
         }
     }
     //Adds 4 new cards to the hand if true.
     if(dpPile[0].getIntAction() == DRAW4){
         for(int i = 0; i<4;i++){
             draw = true;
-            p++;
-            addNewCard(GameState::p+1,d,draw);
-            p--;
+            turn++;
+            addNewCard(d,draw,p,p2);
+            turn--;
         }
     }
     draw = false;
 }
 
  int GameState::getTurn(){
-     return p;
+     return turn;
  }
  
  void GameState::setTurn(int t){
-     p = t;
+     turn = t;
  }
  
  void GameState::setSkip(bool s){
@@ -354,6 +360,7 @@ void GameState::removeCard(Card *c, int &size, int choice, int p, bool a){
  }
  
  void GameState::AI(Deck& d){
+     Player dummy;
      //Controls all aspects of the AI's turn.
      setSkip(false);
      int choice;
@@ -367,8 +374,9 @@ void GameState::removeCard(Card *c, int &size, int choice, int p, bool a){
      }
      if(choice >= 0){
         setDP(p2Hand[choice]);
-        cout << "Your opponent placed "; outputDP(); cout<<endl;
-        isSkip = checkAction(d,1);
+        cout << "The AI placed "; outputDP(); cout<<endl;
+        cout << "The AI now has " << p2Size << " cards" << endl << endl;
+        isSkip = checkAction(d,1,dummy,dummy);
         AIRemove(choice);
      }
 }
@@ -493,45 +501,61 @@ void GameState::removeCard(Card *c, int &size, int choice, int p, bool a){
      return choice;
  }
  
- void GameState::nameSet(){
-     cin.clear();
-     try{
-     Player p;
-     Player p2;
-     int age;
-     int age2;
-     cout << "Player 1 enter your first name: " << endl;
-     string name;
-     string name2;
-     cin >> name;
-     fstream statsFile;
-     statsFile.open("player.txt", ios::out | ios::binary);
-     statsFile.write((char*)&name,sizeof(name));
-     statsFile.close();
-     statsFile.open("player.txt", ios::in | ios::binary);
-     statsFile.read((char*)&name, sizeof(name));
-     statsFile.close();
-     cout << "Welcome " << name <<  " !" << endl;
-     cout << "Enter your age: " << endl;
-     cin >> age;
-     p.setAge(age);
-     cout << "Player 2 enter your first name: " << endl;
-     cin >> name2;
-     cout << "Welcome " << name2 <<  " !" << endl;
-     cout << "Enter your age: ";
-     cin >> age2;
-     p2.setAge(age);
-     if(p.getAge() > p2.getAge()){
-         cout << name << " is younger and will go first!" << endl;
+ void GameState::setUp(Player &p, Player &p2){
+     cout << "Welcome Player 1." << endl;
+     p.setName();
+     p.setAge();
+     cout << endl<<endl;
+     cout << "Welcome Player 2." << endl;
+     p2.setName();
+     p2.setAge();
+     
+     if(p.getAge() < p2.getAge()){
+        cout << p;
+        turn = 1;
      }
      else{
-         cout << name2 << " is younger and will go first!" << endl;
+         cout << p2;
+         turn = 2;
      }
-     }catch(GameState ex){ex.exception(2);}
+}
+ 
+ void GameState::storeStats(Player p){
+    fstream file("stats.bin",ios::binary | ios::in | ios::out | ios::trunc);
+    
+    if(!file.is_open()){
+        cout << "Error opening file" << endl;
+    }
+    else{
+        file.write((char*)&p, sizeof(Player));
+        file.seekg(0);
+    }
+    
+    file.close();
  }
  
- void GameState::exception(int ex){
-     if(ex == 2){
-     cout<< "Exception " << ex << " has been thrown, you failed to enter a valid age." << endl;
+ void GameState::statsOut(Player winner){     
+    fstream file("stats.bin",ios::binary | ios::in | ios::out);
+    if(!file.is_open()){
+        cout << "Error opening file" << endl;
+    }
+    else{
+        file.read((char*)&winner, sizeof(Player));
+    }
+    
+    cout << winner.getName() << " won in " << turn << " turns!" << endl;
+    file.close();
+ }
+ 
+ void GameState::checkStats(Player p){
+     char answer;
+     cout << "Would you like to see see the game stats? [y/n]" << endl;
+     cin >> answer;
+     if(!cin){
+         cout << "Invalid answer!" << endl;
+         checkStats(p);
+     }
+     else if(tolower(answer) == 'y'){
+         statsOut(p);
      }
  }
